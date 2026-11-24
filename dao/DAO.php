@@ -6,7 +6,7 @@ class DAO {
 
   public function __construct() {
     if (!self::$sharedPDO) {
-      $path = getenv('CHALLENGE_DB') ?: dirname(__DIR__, 4) . '/.challenge/challenge.sqlite';
+      $path = getenv('CHALLENGE_DB') ?: dirname(__DIR__, 5) . '/.challenge/challenge.sqlite';
       self::$sharedPDO = new PDO('sqlite:' . $path, null, null, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
       ]);
