@@ -6,7 +6,7 @@
     <script src="js/viewport.js"></script>
     <title>Snel Bakkers</title>
     <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=demo">
     <link rel="stylesheet" href="https://use.typekit.net/xtt5bbq.css">
     <link rel="icon" href="assets/img/kroon.svg">
     <link rel="stylesheet" href="school-intro.css">

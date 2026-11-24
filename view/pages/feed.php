@@ -42,7 +42,7 @@
                             <h3 class="hidden"><?= escape($video['username']) ?></h3>
                             <a href="index.php?page=feed&amp;choice=video&amp;id=<?= $video['id'] ?>" class="video-play"
                                aria-label="Bekijk de poging van <?= escape($video['username']) ?>">
-                                <img class="video-thumbnail" src="assets/img/board2.svg" alt="">
+                                <img class="video-thumbnail" src="assets/img/moelleuxafbeelding.svg" alt="">
                                 <p class="button-place">Plaats: <?= $places[$video['id']] + 1 ?></p>
                                 <span class="video-placeholder" aria-hidden="true"><?= isset($video['video']) ? '▶' : '→' ?></span>
                             </a>
