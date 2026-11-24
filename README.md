@@ -11,17 +11,11 @@ We had to invent a crazy challenge or world record. We had to make a website whe
 ## languages
 This is made with PHP, Javascript, PHPmyadmin.
 
-## Run locally
+## Run the demo locally
 
-Requires PHP with PDO SQLite and Fileinfo. Create a database outside the web root,
-then start the PHP development server from the repository root:
+Start with `php -S 127.0.0.1:8000` from the repository root, then open the site in your browser.
 
-```sh
-export CHALLENGE_DB=/absolute/path/to/challenge.sqlite
-php deploy/init-db.php "$CHALLENGE_DB"
-php -S 127.0.0.1:8000
-```
-
-The database starts with an empty feed. The original repository includes video
-files but has no database dump linking them to accounts or recorded times.
-Vimexx keeps the database in `~/.challenge` and preserves new uploads during deploys.
+The restored site is a read-only demo. The sample attempts, times, likes and
+comments are fictional, and one original clip is available for playback.
+The app has no database or sessions. It rejects requests other than GET and HEAD.
+Vimexx keeps historical uploads and the former database separate from the demo.

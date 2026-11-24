@@ -1,61 +1,49 @@
 <?php
-session_start([
-  'cookie_httponly' => true,
-  'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
-  'cookie_samesite' => 'Lax',
-  'cookie_path' => rtrim(dirname($_SERVER['SCRIPT_NAME']), '/') . '/'
-]);
 
-ini_set('display_errors', '0');
-error_reporting(E_ALL);
-
-$routes = array(
-  'home' => array(
-    'controller' => 'Pages',
-    'action' => 'index'
-  ),
-  'rules' => array(
-    'controller' => 'Pages',
-    'action' => 'rules'
-  ),
-    'login' => array(
-    'controller' => 'Pages',
-    'action' => 'login'
-  ),
-    'feed' => array(
-    'controller' => 'Pages',
-    'action' => 'feed'
-  ),
-    'upload' => array(
-    'controller' => 'Pages',
-    'action' => 'upload'
-  ),
-    'logout' => array(
-    'controller' => 'Pages',
-    'action' => 'logout'
-  )
-);
-
-if (($_GET['page'] ?? null) === 'upload' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if ($method !== 'GET' && $method !== 'HEAD') {
   http_response_code(403);
   header('Content-Type: text/plain; charset=utf-8');
-  exit('Nieuwe video’s uploaden is uitgeschakeld.');
+  exit('Snel Bakkers is een alleen-lezen demo. Deze actie is uitgeschakeld.');
 }
 
-if (empty($_GET['page'])) {
-  $_GET['page'] = 'home';
+$page = $_GET['page'] ?? 'home';
+$choice = $_GET['choice'] ?? 'all';
+$actionDisabled = in_array($page, ['login', 'upload', 'logout', 'register'], true)
+  || ($page === 'feed' && $choice === 'personal');
+
+$template = 'index';
+if ($page === 'rules') {
+  $template = 'rules';
+} elseif ($page === 'feed' || $actionDisabled) {
+  $template = 'feed';
+  $videos = require __DIR__ . '/view/demo-attempts.php';
+  $ranking = array_values($videos);
+  usort($ranking, fn($a, $b) => [$a['time'], $a['id']] <=> [$b['time'], $b['id']]);
+  $places = array_flip(array_column($ranking, 'id'));
+
+  $sort = $_GET['sort'] ?? 'id';
+  if ($sort === 'time') {
+    $attempts = $ranking;
+  } elseif ($sort === 'popular') {
+    $attempts = array_values($videos);
+    usort($attempts, fn($a, $b) => [$b['likes'], $b['id']] <=> [$a['likes'], $a['id']]);
+  } else {
+    $attempts = array_reverse($videos);
+  }
+
+  $id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT);
+  $attempt = $choice === 'video' ? ($videos[$id] ?? null) : null;
+  if ($choice === 'video' && $attempt === null) {
+    http_response_code(404);
+  }
 }
-if (!is_string($_GET['page']) || empty($routes[$_GET['page']])) {
-  header('Location: index.php');
-  exit();
+
+function escape(string $text): string {
+  return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-$route = $routes[$_GET['page']];
-$controllerName = $route['controller'] . 'Controller';
-
-require_once __DIR__ . '/controller/' . $controllerName . ".php";
-
-$controllerObj = new $controllerName();
-$controllerObj->route = $route;
-$controllerObj->filter();
-$controllerObj->render();
+ob_start();
+require __DIR__ . '/view/pages/' . $template . '.php';
+$content = ob_get_clean();
+require __DIR__ . '/view/layout.php';

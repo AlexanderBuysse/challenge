@@ -18,3 +18,20 @@
     }, { once: true });
     intro.showModal();
 })();
+
+(() => {
+    const intro = document.querySelector('[data-project="challenge"]');
+    const notice = document.querySelector('#demo-action');
+    if (typeof notice.showModal !== 'function') return;
+
+    document.querySelectorAll('[data-demo-action]').forEach(button => {
+        button.addEventListener('click', () => notice.showModal());
+    });
+    if (notice.hasAttribute('data-show-on-entry')) {
+        if (intro.open) {
+            intro.addEventListener('close', () => notice.showModal(), { once: true });
+        } else {
+            notice.showModal();
+        }
+    }
+})();

@@ -4,7 +4,6 @@ umask 022
 test -z "${SSH_ORIGINAL_COMMAND:-}"
 root="$HOME/domains/alexanderbuysse.be/public_html"
 checkout="$HOME/repositories/challenge"
-data="$HOME/.challenge"
 lock="$HOME/.deploy-challenge.lock"
 mkdir "$lock"
 trap 'rmdir "$lock"' EXIT
@@ -19,12 +18,8 @@ git fetch origin main
 git reset --hard FETCH_HEAD
 sh deploy/check.sh
 
-install -d -m 700 "$data"
-php deploy/init-db.php "$data/challenge.sqlite"
-
 site="$root/challenge"
-mkdir -p "$site/assets/uploads"
-install -m 644 deploy/uploads.htaccess "$site/assets/uploads/.htaccess"
+mkdir -p "$site"
 rsync -a --delete --include='/.htaccess' --include='/.user.ini' \
   --exclude='/.git/' --exclude='/.github/' --exclude='/deploy/' \
   --exclude='/README.md' --exclude='/assets/uploads/' "$checkout/" "$site/"

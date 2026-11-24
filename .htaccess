@@ -1,3 +1,4 @@
 Options -Indexes
 RewriteEngine On
 RewriteRule ^(?:dao|controller|view)(?:/|$) - [F,L]
+RewriteRule ^assets/uploads(?:/|$) - [F,L]
