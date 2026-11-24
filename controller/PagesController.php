@@ -9,6 +9,11 @@ require_once __DIR__ . '/../dao/video_reactionsDAO.php';
 
 
 class PagesController extends Controller {
+  private $usersDAO;
+  private $badgesDAO;
+  private $videosDAO;
+  private $commentsDAO;
+  private $video_reactionsDAO;
 
 
   function __construct() {
@@ -40,12 +45,12 @@ class PagesController extends Controller {
       header('Location: index.php?');
       exit();
     }
-    if(!empty($_POST)){
+    if(!empty($_POST['action'])){
       $errors=array();
 
       if($_POST['action']==='register'){
-        if(empty($_POST['username'])){
-          $errors['username']= 'vul een gebruikersnaam in';
+        if(!is_string($_POST['username'] ?? null) || trim($_POST['username']) === '' || strlen($_POST['username']) > 80){
+          $errors['username']= 'vul een gebruikersnaam van maximaal 80 tekens in';
         } else{
           $exciting=$this->usersDAO->selectByUsername($_POST['username']);
           if(!empty($exciting)){
@@ -53,10 +58,10 @@ class PagesController extends Controller {
           }
         }
 
-      if (empty($_POST['password'])) {
+      if (!is_string($_POST['password'] ?? null) || $_POST['password'] === '' || strlen($_POST['password']) > 72 || strpos($_POST['password'], chr(0)) !== false) {
         $errors['password'] = 'geef een wachtwoord op';
       }
-      if ($_POST['confirm_password'] != $_POST['password']) {
+      if (($_POST['confirm_password'] ?? null) !== ($_POST['password'] ?? null)) {
         $errors['confirm_password'] = 'wachtwoord komt niet overeen';
       }
 
@@ -83,10 +88,12 @@ class PagesController extends Controller {
       }
 
       if($_POST['action']==='login'){
-        if (!empty($_POST['username']) && !empty($_POST['password'])) {
+        if (is_string($_POST['username'] ?? null) && is_string($_POST['password'] ?? null)) {
         $existing = $this->usersDAO->selectByUsername($_POST['username']);
         if (!empty($existing)) {
           if (password_verify($_POST['password'], $existing['password'])) {
+            session_regenerate_id(true);
+            unset($existing['password']);
             $_SESSION['user'] = $existing;
             $_SESSION['info'] = 'ingelogd!';
             header('location:index.php');
@@ -105,16 +112,23 @@ class PagesController extends Controller {
   }
 
   public function feed(){
-    if(!isset($_GET['choice'])){
+    if (!in_array($_GET['choice'] ?? null, ['all', 'personal', 'video'], true)
+        || ($_GET['choice'] === 'personal' && !isset($_SESSION['user']))) {
       header('Location: index.php?');
       exit();
     }
 
     $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
-      if ($contentType === "application/json") {
+      if ($_SERVER['REQUEST_METHOD'] === 'POST' && $contentType === "application/json") {
 
         $content = trim(file_get_contents("php://input"));
-        $data = json_decode($content, true); // JSON omzetten naar assoc array
+        $data = json_decode($content, true);
+        header('Content-Type: application/json; charset=utf-8');
+        $data = $this->feedInput(is_array($data) ? $data : []);
+        if ($data === null) {
+          echo json_encode(['error' => 'Kies een bestaande poging en vul je reactie in.']);
+          exit();
+        }
 
         if($data['action']==='add-like'){
         $insertedReaction= $this->video_reactionsDAO->insert($data);
@@ -143,7 +157,7 @@ class PagesController extends Controller {
 
       if($data['action']==='add-comment'){
         $insertedcomment = $this->commentsDAO->insert($data);
-        if(empty($data['comment'])){
+        if(!$insertedcomment){
           $errors['error'] = "Er zijn fouten opgetreden";
           $this->set('errors',$errors);
           echo json_encode($errors);
@@ -161,6 +175,10 @@ class PagesController extends Controller {
         }
         exit();
       }
+    }
+
+    if (!empty($_POST)) {
+      $_POST = $this->feedInput($_POST) ?? [];
     }
 
     $videosTime=$this->videosDAO->selectAllVideosTime();
@@ -181,9 +199,10 @@ class PagesController extends Controller {
     }
     $this->set('rangTen', $rangTen);
 
-    $sort='id';
-    if(isset($_GET['sort'])){
-      $sort= $_GET['sort'];
+    $sort = $_GET['sort'] ?? 'id';
+    $allowedSorts = $_GET['choice'] === 'all' ? ['id', 'time', 'popular'] : ['id', 'time'];
+    if (!in_array($sort, $allowedSorts, true)) {
+      $sort = 'id';
     }
 
     
@@ -219,7 +238,7 @@ class PagesController extends Controller {
 
       if(!$badges['ranglijst']){
         foreach($videosTime as $videoTime){
-          if($rangPosition[$videoTime['id']]<=10){
+          if($rangPositions[$videoTime['id']]<=10){
             $this->badgesDAO->updateBadgeRanglijst($_SESSION['user']['id']);
             $_SESSION['info']='Badge verdient: Je staat in de ranglijst! ';
           }
@@ -228,7 +247,7 @@ class PagesController extends Controller {
 
       if(!$badges['nummer1']){
         foreach($videosTime as $videoTime){
-          if($rangPosition[$videoTime['id']]===1){
+          if($rangPositions[$videoTime['id']]===1){
             $this->badgesDAO->updateBadgeNummerEen($_SESSION['user']['id']);
             $_SESSION['info']='Badge verdient: NUMMER 1!';
           }
@@ -251,7 +270,7 @@ class PagesController extends Controller {
 
       if(!$badges['coach']){
       $amountTips=$this->commentsDAO->commentsAccountCount($_SESSION['user']['id']);
-      if($amountTips['COUNT(*)']>=10){
+      if(($amountTips['COUNT(*)'] ?? 0)>=10){
         $this->badgesDAO->updateBadgeCoach($_SESSION['user']['id']);
         $_SESSION['info']='Badge verdient: "Personal coach';
       }
@@ -299,14 +318,6 @@ class PagesController extends Controller {
         exit();
       }
 
-      $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
-      if ($contentType === "application/json") {
-
-        $content = trim(file_get_contents("php://input"));
-        $data = json_decode($content, true); // JSON omzetten naar assoc array
-
-      }
-      
       if(!empty($_POST)){
 
         if($_POST['action']==='add-comment'){
@@ -350,11 +361,7 @@ class PagesController extends Controller {
       }
 
       if($sort==='popular'){
-        $popularvideos=$this->video_reactionsDAO->numberLikesPopular();
-        $videos=array();
-        foreach($popularvideos as $video){
-          $videos[]=$this->videosDAO->selectById($video['id_video']);
-        }  
+        $videos = $this->videosDAO->selectAllVideosPopular();
       }
       $this->set('videos', $videos);
       if(!empty($_POST)){
@@ -380,132 +387,113 @@ class PagesController extends Controller {
   }
 
   
+  private function feedInput(array $data): ?array {
+    $action = $data['action'] ?? null;
+    if (!in_array($action, ['add-like', 'add-comment'], true)) {
+      return null;
+    }
+    $id = filter_var($data['id_video'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    if (!$id || !$this->videosDAO->selectById($id)) {
+      return null;
+    }
+    if ($action === 'add-comment') {
+      $comment = $data['comment'] ?? null;
+      if (!is_string($comment) || trim($comment) === '' || strlen($comment) > 2000) {
+        return null;
+      }
+      $data['comment'] = trim($comment);
+    }
+    $data['id_video'] = $id;
+    $data['id_account'] = $_SESSION['user']['id'] ?? 1;
+    $data['username'] = $_SESSION['user']['username'] ?? 'gast';
+    return $data;
+  }
+
   public function upload(){
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+      return;
+    }
 
-    // variabele om foutmelding bij te houden
-    $error = '';
+    $upload = $_FILES['video'] ?? null;
+    if (!$upload || $upload['error'] !== UPLOAD_ERR_OK || $upload['size'] > 32 * 1024 * 1024) {
+      $this->set('error', 'Kies een MP4-video van maximaal 32 MB.');
+      return;
+    }
+    $time = filter_input(INPUT_POST, 'time', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+    if (!$time || (new finfo(FILEINFO_MIME_TYPE))->file($upload['tmp_name']) !== 'video/mp4') {
+      $this->set('error', 'Kies een MP4-video en vul een geldige tijd in seconden in.');
+      return;
+    }
 
-    // controleer of er iets in de $_POST zit
-    if(!empty($_POST['action'])){
-      // controleer of het wel om het juiste formulier gaat
-      if($_POST['action'] == 'add-video') {
-        // controleren of er een bestand werd geselecteerd
-        if (empty($_FILES['video']) || !empty($_FILES['video']['error'])) {
-          $error = 'Gelieve een bestand te selecteren';
+    $path = 'assets/uploads/' . bin2hex(random_bytes(16)) . '.mp4';
+    $target = dirname(__DIR__) . '/' . $path;
+    if (!move_uploaded_file($upload['tmp_name'], $target)) {
+      $this->set('error', 'De video kon niet worden opgeslagen.');
+      return;
+    }
+    chmod($target, 0644);
+    try {
+      $this->videosDAO->insert([
+        'path' => $path,
+        'time' => $time,
+        'id_account' => $_SESSION['user']['id'] ?? 1,
+        'path_thumbnail' => 0
+      ]);
+    } catch (PDOException $error) {
+      unlink($target);
+      error_log($error->getMessage());
+      $this->set('error', 'De poging kon niet worden opgeslagen.');
+      return;
+    }
+
+    if(isset($_SESSION['user'])){
+      $videosTime=$this->videosDAO->selectAllVideosTime();
+      $rangPosition=array();
+      foreach ($videosTime as $key=>$videoTime){
+        $rangPosition[$videoTime['id']]= $key+1;
+      }
+
+      $badges=$this->badgesDAO->selectByAccountId($_SESSION['user']['id']);
+      if(!$badges['tijd']&&$time>=1600){
+        $this->badgesDAO->updateBadgeTijd($_SESSION['user']['id']);
+        $_SESSION['info']='Badge verdient: "Lange adem';
+      }
+
+      if(!$badges['1poging']){
+        $this->badgesDAO->updateBadgePoging($_SESSION['user']['id']);
+        $_SESSION['info']='Badge verdient: "Eerste poging';
+      }
+
+      if(!$badges['10pogingen']){
+        $amountUploads=$this->videosDAO->amountVideosAccount($_SESSION['user']['id']);
+        if($amountUploads['COUNT(path)']>=10){
+          $this->badgesDAO->updateBadgePogingen($_SESSION['user']['id']);
+          $_SESSION['info']='Badge verdient: "upload 10 pogingen';
         }
+      }
 
-        if(empty($error)){
-          // controleer of het een afbeelding is van het type jpg, png of gif
-          $whitelist_type = array('video/mp4');
-          if(!in_array($_FILES['video']['type'], $whitelist_type)){
-              $error = 'Gelieve een jpeg, png of gif te selecteren';
+      $videosTime=$this->videosDAO->selectVideosByAccountTime($_SESSION['user']['id']);
+
+      if(!$badges['ranglijst']){
+        foreach($videosTime as $videoTime){
+          if($rangPosition[$videoTime['id']]<=10){
+            $this->badgesDAO->updateBadgeRanglijst($_SESSION['user']['id']);
+            $_SESSION['info']='Badge verdient: Je staat in de ranglijst!';
           }
-        }
-
-        /*if(empty($error)){
-          // controleer de afmetingen van het bestand: pas deze gerust aan voor je eigen project
-          // width: 270
-          // height: 480
-          $size = getimagesize($_FILES['image']['tmp_name']);
-          if ($size[0] < 270 || $size[1] < 480) {
-              $error = 'De afbeelding moet minimum 270x480 pixels groot zijn';
-          }
-        }*/
-
-
-        if(empty($error)){
-          // map met een random naam aanmaken voor de upload: redelijk zeker dat er geen conflict is met andere uploads
-          $projectFolder = realpath(__DIR__);
-          $targetFolder = $projectFolder . '/../assets/uploads';
-          $targetFolder = tempnam($targetFolder, '');
-          unlink($targetFolder);
-          mkdir($targetFolder, 0777, true);
-          $targetFileName = $targetFolder . '/' . $_FILES['video']['name'];
-
-          // via de functie _resizeAndCrop() de afbeelding croppen en resizen tot de gevraagde afmeting
-          // pas gerust aan in je eigen project
-          $video = $_FILES["video"]["name"];
- 
-          $command ="/usr/local/bin/ffmpeg -i " . $video . " -vf fps=1/60 thumbnail-%03d.png";
-          system($command);
-          
-          //$this->_resizeAndCrop($_FILES['video']['tmp_name'], $targetFileName, 480, 480);
-
-          $relativeFileName = substr($targetFileName, 1 + strlen($projectFolder));
-          move_uploaded_file($_FILES["video"]["tmp_name"], "assets/uplo" . $relativeFileName);
-
-          $data = array(
-              'path' => 'assets/uplo'.$relativeFileName,
-              'time' => $_POST['time'],
-              'id_account' => $_POST['id_account'],
-              'path_thumbnail'=>$_POST['path_thumbnail']
-          );
-
-
-          }
-          if(!empty($error)){
-          $this->set('error', $error);
-          }else{
-          $insertedVideo = $this->videosDAO->insert($data);
-          if(isset($_SESSION['user'])){
-            $likes= $this->video_reactionsDAO->numberLikes();
-            $keyVideoIdLikes = array();
-            foreach ($likes as $like){
-            $keyVideoIdLikes[$like['id_video']]= $like['COUNT(*)'];
-            }
-
-            $videosTime=$this->videosDAO->selectAllVideosTime();
-            $rangPosition=array();
-            foreach ($videosTime as $key=>$videoTime){
-              $rangPosition[$videoTime['id']]= $key+1;
-            }
-
-            $badges=$this->badgesDAO->selectByAccountId($_SESSION['user']['id']);
-            if(!$badges['tijd']&&$_POST['time']>=1600){
-              $this->badgesDAO->updateBadgeTijd($_SESSION['user']['id']);
-              $_SESSION['info']='Badge verdient: "Lange adem';
-            }
-
-            if(!$badges['1poging']){
-              $this->badgesDAO->updateBadgePoging($_SESSION['user']['id']);
-              $_SESSION['info']='Badge verdient: "Eerste poging';
-            }
-
-            if(!$badges['10pogingen']){
-              $amountUploads=$this->videosDAO->amountVideosAccount($_SESSION['user']['id']);
-              if($amountUploads['COUNT(path)']>=10){
-                $this->badgesDAO->updateBadgePogingen($_SESSION['user']['id']);
-                $_SESSION['info']='Badge verdient: "upload 10 pogingen';
-              }
-            }
-
-            $videosTime=$this->videosDAO->selectVideosByAccountTime($_SESSION['user']['id']);
-
-            if(!$badges['ranglijst']){
-              foreach($videosTime as $videoTime){
-                if($rangPosition[$videoTime['id']]<=10){
-                  $this->badgesDAO->updateBadgeRanglijst($_SESSION['user']['id']);
-                  $_SESSION['info']='Badge verdient: Je staat in de ranglijst!';
-                }
-              }
-
-            if(!$badges['nummer1']){
-              foreach($videosTime as $videoTime){
-                if($rangPosition[$videoTime['id']]===1){
-                  $this->badgesDAO->updateBadgeNummerEen($_SESSION['user']['id']);
-                  $_SESSION['info']='Badge verdient: "NUMMER 1!';
-                }
-              }
-            }
-          }
-          }
-            
-          header('Location: index.php?');
-          exit();
         }
 
       }
-    }
-  }
 
+      if(!$badges['nummer1']){
+        foreach($videosTime as $videoTime){
+          if($rangPosition[$videoTime['id']]===1){
+            $this->badgesDAO->updateBadgeNummerEen($_SESSION['user']['id']);
+            $_SESSION['info']='Badge verdient: "NUMMER 1!';
+          }
+        }
+      }
+    }
+    header('Location: index.php?page=feed&choice=all', true, 303);
+    exit();
+  }
 }

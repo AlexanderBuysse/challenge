@@ -37,35 +37,35 @@
         <div class="rules__ingredients">
             <div class="rules__ingredient">
                 <p class="ingredient-text">2 eieren</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/eieren.svg" alt="eieren">
+                <img class="ingredient-img" src="assets/img/ei.svg" alt="eieren">
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">Weegschaal</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/weegschaal.svg" alt="weegschaal">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">⚖️</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">20g bloem</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/bloem.svg" alt="bloem">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🌾</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">125g boter</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/boter.svg" alt="boter">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🧈</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">60g rietsuiker</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/rietsuiker.svg" alt="rietsuiker">
+                <img class="ingredient-img" src="assets/img/suiker.svg" alt="rietsuiker">
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">Mengkom</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/pot.svg" alt="pot">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🥣</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">1 ei-geel</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/ei-geel.svg" alt="ei geel">
+                <img class="ingredient-img" src="assets/img/ei.svg" alt="ei geel">
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">125g chocolade</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/chocolade.svg" alt="chocolade">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🍫</span>
             </div>
         </div>
         
@@ -94,7 +94,7 @@
 <section class="section__six">
     <h2 class="semi-subtitle subtitle six-larger">breek het wereld record</h2>
     <div class="section__six-time">
-        <img src="assets/img/klok.svg" alt="klok" width="268" height="268">
+        <span aria-hidden="true" style="font-size: 2.4rem">⏱</span>
         <p class="time-title">wr 12m 09s</p>
         <p class="time-text">Je hebt nu alles om de koning en koningin te helpen, upload nu een recordpoging en wordt misschien de beste. </p>
     </div>
@@ -112,23 +112,23 @@
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">Weegschaal</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/weegschaal.svg" alt="weegschaal">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">⚖️</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">175g bloem</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/bloem.svg" alt="bloem">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🌾</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">100g boter</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/boter.svg" alt="boter">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🧈</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">50g kristalsuiker</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/rietsuiker.svg" alt="rietsuiker">
+                <img class="ingredient-img" src="assets/img/suiker.svg" alt="rietsuiker">
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">Mengkom</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/pot.svg" alt="pot">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🥣</span>
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">100g kandijsuiker</p>
@@ -136,7 +136,7 @@
             </div>
             <div class="rules__ingredient">
                 <p class="ingredient-text">200g chocolade</p>
-                <img class="ingredient-img" src="assets/img/ingredienten/chocolade.svg" alt="chocolade">
+                <span class="ingredient-img" aria-hidden="true" style="font-size: 2.4rem">🍫</span>
             </div>
         </div>
         
@@ -163,7 +163,7 @@
 <section class="section__six">
     <h2 class="semi-subtitle subtitle six-larger">oefen voor het wereldrecord</h2>
     <div class="section__six-time">
-        <img src="assets/img/klok.svg" alt="klok" width="268" height="268">
+        <span aria-hidden="true" style="font-size: 2.4rem">⏱</span>
         <p class="time-title">wr 12m 09s</p>
         <p class="time-text">Je kan nu goed koekjes bakken. Oefen nu op moelleuxs bakken en maak kans om in de hall of fame terecht te komen</p>
     </div>

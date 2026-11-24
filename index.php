@@ -1,8 +1,12 @@
 <?php
-session_start();
-//session_destroy();
+session_start([
+  'cookie_httponly' => true,
+  'cookie_secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+  'cookie_samesite' => 'Lax',
+  'cookie_path' => rtrim(dirname($_SERVER['SCRIPT_NAME']), '/') . '/'
+]);
 
-ini_set('display_errors', true);
+ini_set('display_errors', '0');
 error_reporting(E_ALL);
 
 $routes = array(
@@ -35,7 +39,7 @@ $routes = array(
 if (empty($_GET['page'])) {
   $_GET['page'] = 'home';
 }
-if (empty($routes[$_GET['page']])) {
+if (!is_string($_GET['page']) || empty($routes[$_GET['page']])) {
   header('Location: index.php');
   exit();
 }

@@ -5,7 +5,7 @@
         <line x2="681" transform="translate(4.5 4.5)" stroke="#a23740" stroke-linecap="round" stroke-width="9"/>
     </svg> 
     <div class="upload__section">
-        <img class="upload__section-img" src="assets/img/upload.svg" alt="afbeelding princes koning koningin"> 
+        <img class="upload__section-img" src="assets/img/kokknop.svg" alt="afbeelding princes koning koningin">
         <div>
             <div class="upload__login">
                     <?php if(!isset($_SESSION['user'])):?>
@@ -14,7 +14,7 @@
                     <p>met een account</p>
                     <a href="index.php?page=login&choice=login" class="login-button login-big">maak een account of log in</a>
                 <?php elseif(isset($_SESSION['user'])):?>
-                    <p class="login-big">ingelogd als <?php echo $_SESSION['user']['username'];?></p>
+                    <p class="login-big">ingelogd als <?php echo htmlspecialchars($_SESSION['user']['username'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');?></p>
                 <?php endif;?>
             </div>
             <form action="index.php?page=upload" class="form-upload" method="post" enctype="multipart/form-data">
@@ -23,21 +23,21 @@
                 <input type="hidden" name="path_thumbnail" value="0">
                 <div class="form__video-thumbnail">
                     <div class="video-inputs">
-                        <p class="error"></p>
+                        <p class="error"><?= htmlspecialchars($error ?? '', ENT_QUOTES, 'UTF-8') ?></p>
                         <div>
-                        <input type="file" id="file" name="video" accept="image/png, image/jpeg, image/gif, video/mp4" required class="button-file">
-                        <label for="file">Kies een video (mp4)</label><br>
+                        <input type="file" id="file" name="video" accept="video/mp4" required class="button-file">
+                        <label for="file">Kies een MP4-video (max. 32 MB)</label><br>
                         </div>
 
                         <div>
                         <p class="error"></p>
                         <label class="video-input"><span class="login-big">tijd</span><br>
-                            <input type="number" minlength="2" name="time" class="input-sec input" required>seconden
+                            <input type="number" min="1" name="time" class="input-sec input" required>seconden
                         </label>
                         </div>
                     </div>
                     <div class="video">
-                        <img src="assets/img/thumbnail.svg" alt="thumbnail">
+                        <img src="assets/img/moelleuxafbeelding.svg" alt="thumbnail">
                     </div>
                 </div>
                 <input type="submit" class="register-button form-submit margintop" value="voltooi je upload">

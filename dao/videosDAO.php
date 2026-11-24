@@ -54,6 +54,14 @@ class videosDAO extends DAO {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  public function selectAllVideosPopular(){
+    $sql = "SELECT videos.* FROM videos
+      LEFT JOIN (SELECT id_video, COUNT(*) AS likes FROM video_reactions GROUP BY id_video) reactions
+        ON videos.id = reactions.id_video
+      ORDER BY COALESCE(reactions.likes, 0) DESC, videos.id DESC";
+    return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+  }
+
   public function amountVideos(){
     $sql = "SELECT COUNT(path) FROM videos WHERE path_thumbnail=0";
     $stmt = $this->pdo->prepare($sql);

@@ -7,25 +7,15 @@
         </div>
         <img class="section__one-img" src="assets/img/illustratiehand.svg" alt="hand">
     </div>
-    <div class="section__cts">
-        <p class="subtitle">5 min</p>
-        <img src="assets/img/klok.svg" alt="klok">
-        <p class="subtitle semi-subtitle">beluister het verhaal</p>
-        <img src="assets/img/cts.svg" alt="cts">
-    </div>
 </section>
 
 <section class="section__two">
-        <audio controls class="section__two-audio">
-            <source src="assets/audio/challenge.m4a" type="audio/mp4">
-        Your browser does not support the audio element.
-        </audio>
 
     <img  class="section__two-transition" src="assets/img/gordijnsectie1.svg" alt="gordijn">
-    <img class="section__two-scene" src="assets/img/gordijnen.svg" alt="gordijnen">
+    <img class="section__two-scene" src="assets/img/gordijn.svg" alt="gordijnen">
     <div class="section__two-king">
         <img src="assets/img/koninginvolledig.svg" alt="koningin" width="400.99" height="553.55">
-        <img class="two__king" src="assets/img/koningvolledig.svg" alt="koning" width="550" height="499.04">
+        <img class="two__king" src="assets/img/knight.svg" alt="ridder" width="550" height="499.04">
         <img class="two__princes" src="assets/img/prinsesbed.svg" alt="prinses in bed">
     </div>
     <ul class="section__list section__two-list">
@@ -42,7 +32,7 @@
         <li class="section__two-listitem"><h2  class="section__two-listitem subtitle semi-subtitle">deel 2</h2></li>
         <li></li>
     </ul>
-    <img class="princes-queen" id="second" src="assets/img/imagescene2.svg" alt="koningin en prinses">
+    <img class="princes-queen" id="second" src="assets/img/scene3.svg" alt="koningin en prinses">
     <img class="hand-queen" src="assets/img/koninginhand.svg" alt="hand koningin">
 </section>
 
@@ -80,7 +70,7 @@
 <section class="section__six">
     <h2 class="semi-subtitle subtitle six-larger">breek het wereld record</h2>
     <div class="section__six-time">
-        <img src="assets/img/klok.svg" alt="klok" width="268" height="268">
+        <span aria-hidden="true" style="font-size: 2.4rem">⏱</span>
         <p class="time-title">wr 12" 09'</p>
         <p class="time-text">Wil jij voor eeuwig herinnerd worden in de hall of fame? Waag een poging en word de beste.</p>
     </div>

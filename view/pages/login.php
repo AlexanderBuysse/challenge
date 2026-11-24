@@ -26,7 +26,7 @@
                         </label>
                     </div>
                     <div class="form-input">
-                        <p class="error"><?php if(!empty($errors['password'])) echo $errors['confirm_password'];?></p>
+                        <p class="error"><?php if(!empty($errors['confirm_password'])) echo $errors['confirm_password'];?></p>
                         <label>herhaal wachtwoord <br>
                             <input  class="input-field input" type="password" placeholder="•••••••" name="confirm_password" maxlength="18" minlength="3" required>
                         </label>

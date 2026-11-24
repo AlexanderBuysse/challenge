@@ -40,12 +40,10 @@
 
     
     const handleChangeButtonFile =(e)=>{
-        let fileName= ``;
-        fileName = e.target.value.split(`\\`)[2];
-        console.log(fileName);
-        let label = e.currentTarget.nextElementSibling;
-        label.innerHTML = fileName; 
-        let file = event.target.files[0];
+        const file = e.currentTarget.files[0];
+        const label = e.currentTarget.nextElementSibling;
+        label.textContent = file ? file.name : 'Kies een MP4-video (max. 32 MB)';
+        if (!file) return;
         let blobURL = URL.createObjectURL(file);
         let video =`<video width="320" height="220" controls><source src="${blobURL}" type="video/mp4"><source src="movie.ogg" type="video/ogg">Your browser does not support the video tag.</video>`
         document.querySelector(`.video`).innerHTML=video;
@@ -80,7 +78,7 @@
     };
 
     const showCount = (numbers, $count) => {
-        if ($count) {
+        if ($count && numbers.like) {
             $count.textContent = numbers['like']['COUNT(*)'];
             console.log(numbers.info)
             if(numbers['info']!==undefined){
@@ -128,7 +126,11 @@
         $parent.innerHTML = ``;
         comments['comments'].forEach(comment => {
             const $licomment = document.createElement('li');
-            $licomment.innerHTML = `<li class="ranglist-comment"><span class="subtitle">${comment.username}: </span>${comment.comment}</li>`;
+            $licomment.className = 'ranglist-comment';
+            const username = document.createElement('span');
+            username.className = 'subtitle';
+            username.textContent = comment.username + ': ';
+            $licomment.append(username, document.createTextNode(comment.comment));
             $parent.appendChild($licomment);
         });
         if(comments.info!==undefined){

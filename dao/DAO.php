@@ -1,31 +1,18 @@
 <?php
 
 class DAO {
+  private static $sharedPDO;
+  protected $pdo;
 
-  // Properties
-  private static $dbHost = "mysql";
-	private static $dbName = "snelbakkers";
-	private static $dbUser = "snelbakkersuser";
-	private static $dbPass = "snelpass";
-	private static $sharedPDO;
-	protected $pdo;
-
-  // Constructor
-	function __construct() {
-
-		if(empty(self::$sharedPDO)) {
-			self::$sharedPDO = new PDO("mysql:host=" . self::$dbHost . ";dbname=" . self::$dbName, self::$dbUser, self::$dbPass);
-			self::$sharedPDO->exec("SET CHARACTER SET utf8");
-			self::$sharedPDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			self::$sharedPDO->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		}
-
-		$this->pdo =& self::$sharedPDO;
-
-	}
-
-  // Methods
-
+  public function __construct() {
+    if (!self::$sharedPDO) {
+      $path = getenv('CHALLENGE_DB') ?: dirname(__DIR__, 4) . '/.challenge/challenge.sqlite';
+      self::$sharedPDO = new PDO('sqlite:' . $path, null, null, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+      ]);
+      self::$sharedPDO->exec('PRAGMA busy_timeout = 5000');
+      self::$sharedPDO->exec('PRAGMA foreign_keys = ON');
+    }
+    $this->pdo = self::$sharedPDO;
+  }
 }
-
- ?>
