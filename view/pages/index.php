@@ -74,5 +74,5 @@
         <p class="time-title">wr 12" 09'</p>
         <p class="time-text">Wil jij voor eeuwig herinnerd worden in de hall of fame? Waag een poging en word de beste.</p>
     </div>
-    <a href="index.php?page=upload" class="button-upload"><span class="upload-plus">+</span> <svg width="5" height="63" viewBox="0 0 4.5 90.5"><line y2="86" transform="translate(2.25 2.25)" fill="none" stroke="#D84955" stroke-linecap="round" stroke-width="5"/></svg> <span>uploaden</span></a>
+    <a href="index.php?page=feed&amp;choice=all" class="button-upload">Bekijk de pogingen</a>
 </section>

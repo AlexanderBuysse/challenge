@@ -36,6 +36,12 @@ $routes = array(
   )
 );
 
+if (($_GET['page'] ?? null) === 'upload' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+  http_response_code(403);
+  header('Content-Type: text/plain; charset=utf-8');
+  exit('Nieuwe video’s uploaden is uitgeschakeld.');
+}
+
 if (empty($_GET['page'])) {
   $_GET['page'] = 'home';
 }

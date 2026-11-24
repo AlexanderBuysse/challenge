@@ -12,7 +12,11 @@ body {
     font-family: sofia-pro-soft, sans-serif;
     font-weight: 500;
     font-style: normal;
+}
+
+.desktop-layout {
     width: 158rem;
+    zoom: var(--desktop-scale, 1);
     margin-left: auto;
     margin-right: auto;
     background-color:#FFEDBE;

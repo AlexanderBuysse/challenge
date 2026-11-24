@@ -15,8 +15,6 @@
             </div>
             <?php if(isset($_SESSION['user'])&&$_GET['choice']==='personal'):?>
                 <p class="button-feed">Aantal badges: <?php echo $amountBadges?></p>
-            <?php else:?>
-                <a href="index.php?page=upload" class="button-upload"><span class="upload-plus">+</span> <svg width="5" height="63" viewBox="0 0 4.5 90.5"><line y2="86" transform="translate(2.25 2.25)" fill="none" stroke="#D84955" stroke-linecap="round" stroke-width="5"/></svg> <span>uploaden</span></a>
             <?php endif?>
         </div>
         <div class="middle feed-videos">
@@ -98,11 +96,6 @@
                     </div>
                 </article>
                 <?php endforeach;?>
-                <a href="index.php?page=upload" class="feed-card upload-button">
-                    <h3 class="hidden">upload</h3>
-                    <img src="assets/img/plus.svg" alt="plus">
-                    <p>nieuwe poging</p>
-                </a>
                 <?php elseif($_GET['choice']==='video'):?>
                     <video width="1000" height="600" controls>
                         <source src="<?php echo htmlspecialchars($videoWatch['path'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')?>" type="video/mp4">

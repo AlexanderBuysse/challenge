@@ -98,7 +98,7 @@
         <p class="time-title">wr 12m 09s</p>
         <p class="time-text">Je hebt nu alles om de koning en koningin te helpen, upload nu een recordpoging en wordt misschien de beste. </p>
     </div>
-    <a href="index.php?page=upload" class="button-upload"><span class="upload-plus">+</span> <svg width="5" height="63" viewBox="0 0 4.5 90.5"><line y2="86" transform="translate(2.25 2.25)" fill="none" stroke="#D84955" stroke-linecap="round" stroke-width="5"/></svg> <span>uploaden</span></a>
+    <a href="index.php?page=feed&amp;choice=all" class="button-upload">Bekijk de pogingen</a>
 </section>
 <?php else:?>
 

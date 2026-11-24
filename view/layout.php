@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/viewport.js"></script>
     <title>snel bakkers  -<?php if(isset($_GET['page'])){echo $_GET['page'];}?></title>
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://use.typekit.net/xtt5bbq.css">
     <link rel="icon" href="assets/img/kroon.svg">
+    <link rel="stylesheet" href="school-intro.css">
+    <script src="school-intro.js" defer></script>
 </head>
 
 <body>
+<div class="desktop-layout">
     <header class="header">
     <h1 class="hidden">snelheid bakkers</h1>
         <nav class="navi">
@@ -57,6 +61,15 @@
     </main>
 
     <script src="js/script.js"></script>
+</div>
+
+    <dialog class="school-intro" data-project="challenge" aria-labelledby="school-intro-title" aria-describedby="school-intro-description">
+        <h2 id="school-intro-title">Snel Bakkers</h2>
+        <p id="school-intro-description">Dit is een schoolproject uit 2020 over een wedstrijd moelleux bakken. Het ontwerp is gemaakt voor een vaste desktopbreedte. Op je telefoon zie je dezelfde indeling verkleind. Nieuwe video’s uploaden is uitgeschakeld.</p>
+        <form method="dialog">
+            <button type="submit" autofocus>Bekijk het project</button>
+        </form>
+    </dialog>
 </body>
 
 </html>

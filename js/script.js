@@ -39,16 +39,6 @@
         }
 
     
-    const handleChangeButtonFile =(e)=>{
-        const file = e.currentTarget.files[0];
-        const label = e.currentTarget.nextElementSibling;
-        label.textContent = file ? file.name : 'Kies een MP4-video (max. 32 MB)';
-        if (!file) return;
-        let blobURL = URL.createObjectURL(file);
-        let video =`<video width="320" height="220" controls><source src="${blobURL}" type="video/mp4"><source src="movie.ogg" type="video/ogg">Your browser does not support the video tag.</video>`
-        document.querySelector(`.video`).innerHTML=video;
-    }
-
     const handleSubmitForm = e => {
         e.preventDefault();
         const $form = e.currentTarget;
@@ -190,10 +180,6 @@
         ratingButtons.forEach($button => $button.addEventListener(`input`, handleInputRatingButton))
     }
 
-    const $inputFile = document.querySelector(`.button-file`);
-    if($inputFile){
-        $inputFile.addEventListener(`change`, handleChangeButtonFile)
-    }
     }
     init();
 }
