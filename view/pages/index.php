@@ -74,5 +74,5 @@
         <p class="time-title">wr 12" 09'</p>
         <p class="time-text">Wil jij voor eeuwig herinnerd worden in de hall of fame? Waag een poging en word de beste.</p>
     </div>
-    <a href="index.php?page=feed&amp;choice=all" class="button-upload">Bekijk de pogingen</a>
+    <a href="index.php?page=feed&amp;choice=all" class="button-upload" lang="en">Browse the entries</a>
 </section>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="<?= $template === 'feed' ? 'en' : 'nl' ?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,8 +31,8 @@
                 </li>
                 
                 <li class="navi__list-item">
-                    <button type="button" class="register-button bruh" data-demo-action>Inloggen</button>
-                    <button type="button" class="register-button bruh" data-demo-action>Maak een account</button>
+                    <button type="button" class="register-button bruh" lang="en" data-demo-action>Sign in</button>
+                    <button type="button" class="register-button bruh" lang="en" data-demo-action>Create an account</button>
                 </li>
             </ul>
         </nav>
@@ -41,19 +41,19 @@
     <main><?= $content ?></main>
 </div>
 
-    <dialog class="school-intro" data-project="challenge" aria-labelledby="school-intro-title" aria-describedby="school-intro-description">
-        <h2 id="school-intro-title">Snel Bakkers</h2>
-        <p id="school-intro-description">Dit is een schoolproject uit 2020 over een wedstrijd moelleux bakken. Het ontwerp is gemaakt voor een vaste desktopbreedte. Op je telefoon zie je dezelfde indeling verkleind. Je kunt de voorbeeldpogingen bekijken en sorteren.</p>
+    <dialog lang="en" class="school-intro" data-project="challenge" aria-labelledby="school-intro-title" aria-describedby="school-intro-description">
+        <h2 id="school-intro-title">Speed Bakers</h2>
+        <p id="school-intro-description">This 2020 school project is about baking chocolate lava cakes against the clock. It was designed for a fixed desktop width, so the same layout is scaled down on phones. You can browse and sort the demo entries.</p>
         <form method="dialog">
-            <button type="submit" autofocus>Bekijk het project</button>
+            <button type="submit" autofocus>View project</button>
         </form>
     </dialog>
 
-    <dialog class="school-intro" id="demo-action" aria-labelledby="demo-action-title" aria-describedby="demo-action-description" <?= $actionDisabled ? 'data-show-on-entry' : '' ?>>
-        <h2 id="demo-action-title">Deze actie is uitgeschakeld</h2>
-        <p id="demo-action-description">Snel Bakkers is een oud schoolproject. Om de hosting te beschermen staat de site in demomodus. Je kunt de voorbeeldpogingen bekijken en sorteren. Uploaden, inloggen, accounts aanmaken, liken en reageren zijn uitgeschakeld.</p>
+    <dialog lang="en" class="school-intro" id="demo-action" aria-labelledby="demo-action-title" aria-describedby="demo-action-description" <?= $actionDisabled ? 'data-show-on-entry' : '' ?>>
+        <h2 id="demo-action-title">This action is disabled</h2>
+        <p id="demo-action-description">Speed Bakers is an archived school project. To protect the hosting server, it runs as a read-only demo. You can browse and sort the sample entries. Uploads, sign-in, registration, likes and comments are disabled.</p>
         <form method="dialog">
-            <button type="submit" autofocus>Verder kijken</button>
+            <button type="submit" autofocus>Keep browsing</button>
         </form>
     </dialog>
 </body>

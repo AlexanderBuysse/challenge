@@ -98,7 +98,7 @@
         <p class="time-title">wr 12m 09s</p>
         <p class="time-text">Je hebt nu alles om de koning en koningin te helpen, upload nu een recordpoging en wordt misschien de beste. </p>
     </div>
-    <a href="index.php?page=feed&amp;choice=all" class="button-upload">Bekijk de pogingen</a>
+    <a href="index.php?page=feed&amp;choice=all" class="button-upload" lang="en">Browse the entries</a>
 </section>
 <?php else:?>
 

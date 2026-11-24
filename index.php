@@ -4,7 +4,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 if ($method !== 'GET' && $method !== 'HEAD') {
   http_response_code(403);
   header('Content-Type: text/plain; charset=utf-8');
-  exit('Snel Bakkers is een alleen-lezen demo. Deze actie is uitgeschakeld.');
+  exit('Speed Bakers is a read-only demo. This action is disabled.');
 }
 
 $page = $_GET['page'] ?? 'home';
